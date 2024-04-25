@@ -1,34 +1,42 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import Home from './pages/Home'
-import Navbar from './components/NavBar'
-import Footer from './components/Footer'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import Category from './pages/Category'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Home from "./pages/Home";
+import Navbar from "./components/NavBar";
+import Footer from "./components/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Category from "./pages/Category";
 
 function App() {
-
   const [fetchData, setFetchData] = useState([]);
-  const [category, setCategory] = useState('trending')
-  const [testCategory, setTestCategory] = useState(category)
-  console.log(category)
-  console.log(fetchData)
+  const sourceIds = [...new Set(fetchData.map(article => article.source.id)?.filter(sourceId => sourceId !== null && sourceId !== undefined && sourceId !== ''))];
+  console.log(sourceIds);
+  const [category, setCategory] = useState(
+    localStorage.getItem("category") || "trending"
+  );
+  const [source, setSource] = useState("");
+  const [date, setDate] = useState("");
+  const [filterData, setFilterData] = useState({
+    source: "",
+    date: "",
+  });
+  console.log(filterData);
+  console.log(source);
+  // console.log(category);
+  console.log(fetchData);
 
   useEffect(() => {
-
-      // Retrieve the flag indicating whether the category has changed
-  const categoryChanged = localStorage.getItem("categoryChanged");
-
-  // If the flag is true (indicating the category has changed), clear the randomData from local storage
-  if (categoryChanged === "true") {
-    localStorage.removeItem("randomData");
-    // Reset the flag to false
-    localStorage.setItem("categoryChanged", "false");
-  }
+    // Retrieve the flag indicating whether the category has changed
+    const categoryChanged = localStorage.getItem("categoryChanged");
+    if (categoryChanged === "true") {
+      localStorage.setItem("randomData", "false");
+      // Reset the flag to false
+      localStorage.setItem("categoryChanged", "false");
+    }
     axios
       .get(
-        `https://newsapi.org/v2/everything?q=${category}&apiKey=edc2387a534843fba82179a1268a2e4e`
+        // `https://newsapi.org/v2/everything?sources=bcc-news&q=${category}&from=${filterData?.date}&apiKey=edc2387a534843fba82179a1268a2e4e`
+        `https://newsapi.org/v2/everything?sources=${filterData?.source}&q=${category}&from=${filterData?.date}&apiKey=edc2387a534843fba82179a1268a2e4e`
       )
       // .then((res) => console.log(res))
       .then((res) => {
@@ -36,7 +44,7 @@ function App() {
         setFetchData(res?.data?.articles);
       })
       .catch((error) => console.error(error));
-  }, [category]);
+  }, [category, filterData?.date, filterData?.source]);
 
   const [randomData, setRandomData] = useState(null);
   const [randomMapData, setRandomMapData] = useState(null);
@@ -75,7 +83,7 @@ function App() {
       // const randomData = shuffledData.slice(0, 3);
       setRandomMapData(shuffledData);
       localStorage.setItem("randomData", JSON.stringify(shuffledData));
-    }
+    };
     // Retrieve random data from local storage
     const storedRandomData = JSON.parse(localStorage.getItem("randomData"));
 
@@ -83,7 +91,7 @@ function App() {
       setRandomMapData(storedRandomData);
     } else {
       // Update random data initially
-      updateRandomMapData()
+      updateRandomMapData();
     }
 
     // Set interval to update random data every 15 minutes
@@ -95,19 +103,39 @@ function App() {
     // Clean up interval on unmount
     return () => clearInterval(intervalId);
   }, [fetchData]);
-  
+
+  const handleApplyFilter = (e) => {
+    e.preventDefault();
+    setFilterData((prev) => ({ ...prev, source: source, date: date }));
+  };
   return (
     <BrowserRouter>
-    <Navbar category={category} setCategory={setCategory} />
-    <div className='h-full mb-10' >
-      <Routes >
-        {/* <Route path='/trending' element={<Home randomMapData={randomMapData} randomData={randomData} setCategory={setCategory} />} /> */}
-        <Route path={`/${category}`} element={<Category randomMapData={randomMapData} randomData={randomData} setCategory={setCategory} />} />
-      </Routes>
-    </div>
-    <Footer category={category} setCategory={setCategory}/>
+      <Navbar
+        category={category}
+        setCategory={setCategory}
+        setDate={setDate}
+        setSource={setSource}
+        handleApplyFilter={handleApplyFilter}
+        sourceIds={sourceIds}
+      />
+      <div className="h-full mb-10">
+        <Routes>
+          {/* <Route path='/trending' element={<Home randomMapData={randomMapData} randomData={randomData} setCategory={setCategory} />} /> */}
+          <Route
+            path={`/${category}`}
+            element={
+              <Category
+                randomMapData={randomMapData}
+                randomData={randomData}
+                setCategory={setCategory}
+              />
+            }
+          />
+        </Routes>
+      </div>
+      <Footer category={category} setCategory={setCategory} />
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

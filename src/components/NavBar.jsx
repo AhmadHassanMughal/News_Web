@@ -14,15 +14,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Drawer, SwipeableDrawer } from "@mui/material";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineSearch } from "react-icons/ai";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-const Navbar = ({ category, setCategory }) => {
+const Navbar = ({
+  category,
+  setCategory,
+  setDate,
+  setSource,
+  handleApplyFilter,
+  sourceIds,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const localCategory = localStorage.getItem("category");
+  console.log(localCategory);
+
   const handleCategoryChange = (newCategory) => {
-    console.log(newCategory);
     setCategory(newCategory);
     // Set the flag to true indicating the category has changed
+    localStorage.setItem("category", newCategory);
     localStorage.setItem("categoryChanged", "true");
     navigate(`/${newCategory}`);
   };
@@ -54,6 +65,12 @@ const Navbar = ({ category, setCategory }) => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const [filterOpen, setFilterOpen] = useState();
+
+  const handleFilter = () => {
+    setFilterOpen(!filterOpen);
   };
 
   return (
@@ -135,7 +152,7 @@ const Navbar = ({ category, setCategory }) => {
         } */}
       </div>
       <div className="max-md:hidden block">
-        <nav className="bg-gray-200 border-b-[3px] border-black pt-4 mt-4 pb-2 ">
+        <nav className="bg-gray-200 pt-4 mt-4 pb-2 ">
           <ul className="flex gap-16 px-10 text-[1rem] font-[400] text-gray-700 ">
             <li
               onClick={() => {
@@ -143,7 +160,7 @@ const Navbar = ({ category, setCategory }) => {
               }}
               className={` cursor-pointer
             ${
-              category === "trending"
+              localCategory === "trending"
                 ? "border-b-4 pb-2 border-red-800"
                 : "hover:border-b-4 pb-2 border-red-300"
             }`}
@@ -157,7 +174,7 @@ const Navbar = ({ category, setCategory }) => {
               }}
               className={`cursor-pointer
             ${
-              category === "politics"
+              localCategory === "politics"
                 ? "border-b-4 pb-2 border-red-800"
                 : "hover:border-b-4 pb-2 border-red-300"
             }`}
@@ -170,7 +187,7 @@ const Navbar = ({ category, setCategory }) => {
               }}
               className={`cursor-pointer
       ${
-        category === "climate"
+        localCategory === "climate"
           ? "border-b-4 pb-2 border-red-800"
           : "hover:border-b-4 pb-2 border-red-300"
       }`}
@@ -184,7 +201,7 @@ const Navbar = ({ category, setCategory }) => {
               }}
               className={`cursor-pointer
       ${
-        category === "business"
+        localCategory === "business"
           ? "border-b-4 pb-2 border-red-800"
           : "hover:border-b-4 pb-2 border-red-300"
       }`}
@@ -195,11 +212,11 @@ const Navbar = ({ category, setCategory }) => {
               // onSubmit={handlSearchSubmit}
               className="ml-auto max-lg:hidden "
             >
-              <div className="relative bg-white !border-gray-500 hover:!border-black border-[1px] rounded-lg p-[3px] max-md:ml-0 mr-auto">
+              <div className="relative bg-white !border-gray-300 hover:!border-gray-400 border-[2px] rounded-[15px] shadow-xl p-[3px] max-md:ml-0 mr-auto">
                 <input
                   type="text"
                   // onChange={(e) => setSearch(e.target.value)}
-                  className="pl-[30px] w-[24rem] max-md:w-[15rem] h-[2rem] max-md:h-[1.5rem] max-md:text-[0.7rem] ring-0 outline-none"
+                  className="pl-[30px] w-[24rem] max-md:w-[15rem] h-[1.5rem] max-md:h-[1.5rem] max-md:text-[0.7rem] ring-0 outline-none"
                   placeholder="Search here"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none mt-[0px]">
@@ -213,9 +230,12 @@ const Navbar = ({ category, setCategory }) => {
       <div className="hidden max-md:block">
         <AppBar position="static" className="!bg-white">
           <Toolbar>
-            <p className="text-[1.2rem] text-blue-900 ml-auto">
+            <p className="font-[300] text-[1.5rem] text-black ">
               {" "}
-              Jobss.com.pk{" "}
+              Latest{" "}
+              <span className="text-[1.7rem] text-red-900 font-[600] tracking-[3px]">
+                News
+              </span>
             </p>
             <IconButton
               size="large"
@@ -321,15 +341,16 @@ const Navbar = ({ category, setCategory }) => {
           </Toolbar>
         </AppBar>
       </div>
+
       <form
         // onSubmit={handlSearchSubmit}
-        className="ml-auto lg:hidden mt-3 w-[50%] max-sm:w-[70%] "
+        className="flex justify-end gap-3 mt-3 w-[100%] "
       >
-        <div className="relative bg-white !border-gray-500 hover:!border-black border-[1px] rounded-lg p-[3px] max-md:ml-0 mr-auto">
+        <div className="relative md:hidden bg-white !border-gray-500 hover:!border-black border-[1px] rounded-[15px] p-[3px] max-md:ml-0">
           <input
             type="text"
             // onChange={(e) => setSearch(e.target.value)}
-            className="pl-[4%] w-[24rem] max-md:w-[100%] h-[2rem] max-md:h-[1.5rem] max-md:text-[0.9rem] ring-0 outline-none"
+            className="pl-[4%] w-[24rem] max-md:w-[100%] h-[1.5rem] max-md:h-[1.5rem] max-md:text-[0.9rem] ring-0 outline-none"
             placeholder="Search here"
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none mt-[0px]">
@@ -337,6 +358,44 @@ const Navbar = ({ category, setCategory }) => {
           </div>
         </div>
       </form>
+      <div className="flex justify-end gap-5 w-full mt-3">
+        {filterOpen && (
+          <div className="flex max-md:flex-col max-md:w-full gap-2 ">
+            <div className="flex gap-2" >
+              <select
+                name="sources"
+                id="sources"
+                onChange={(e) => setSource(e.target.value)}
+                className="border-[1px] border-gray-400 pl-[2%] w-[16rem] max-md:w-[100%] h-[2rem] max-md:h-[1.5rem] max-md:text-[0.9rem] ring-0 outline-none rounded-[15px]"
+              >
+                {sourceIds?.map((val, index) => (
+                  <option key={index} value={val}>
+                    {val}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="date"
+                onChange={(e) => setDate(e.target.value)}
+                className="border-[1px] px-3 border-gray-400 pl-[2%] w-[16rem] max-md:w-[100%] h-[2rem] max-md:h-[1.5rem] max-md:text-[0.9rem] ring-0 outline-none rounded-[15px]"
+                placeholder="Enter Source"
+              />
+            </div>
+            <button
+              onClick={handleApplyFilter}
+              className="max-md:w-[40%] max-md:m-auto max-sm:text-[.8rem]  px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Apply Filter
+            </button>
+          </div>
+        )}
+        <div className="border-2 border-gray-400 rounded-md cursor-pointer shadow-md flex justify-center items-center">
+          <FilterAltIcon
+            onClick={handleFilter}
+            className="w-6 h-6 text-black"
+          />
+        </div>
+      </div>
     </div>
   );
 };

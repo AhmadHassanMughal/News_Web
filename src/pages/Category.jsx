@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const initialItemsToShow = 10;
-const itemsPerLoad = 5;
+const initialItemsToShow = 11;
+const itemsPerLoad = 4;
 
 const Category = ({ randomData, randomMapData, setCategory }) => {
   const [itemsToShow, setItemsToShow] = useState(initialItemsToShow);
@@ -37,7 +37,7 @@ const Category = ({ randomData, randomMapData, setCategory }) => {
             )
             ?.map((val, index) => (
               <>
-                <div className="flex max-sm:flex-col gap-2 text-left">
+                <div key={index} className="flex max-sm:flex-col gap-2 text-left">
                   <img
                     src={val?.urlToImage}
                     className="h-[150px] w-[200px] max-sm:w-full "
@@ -67,10 +67,9 @@ const Category = ({ randomData, randomMapData, setCategory }) => {
               (val) =>
                 val.urlToImage && val.source?.name && val.title && val.author
             )
-            ?.map((val, index) => (
-              <>
+            ?.map((val, i) => (
                 <div
-                  key={index}
+                  key={i}
                   className="shadow-xl border-[3px] border-gray-200 "
                 >
                   <div className="flex flex-col gap-2 text-left">
@@ -92,10 +91,9 @@ const Category = ({ randomData, randomMapData, setCategory }) => {
                     </div>
                   </div>
                 </div>
-              </>
             ))}
         </div>
-        {randomMapData.length > itemsToShow && (
+        {randomMapData?.length > itemsToShow && (
           <button
             onClick={handleLoadMore}
             className="mt-5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
