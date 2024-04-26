@@ -107,7 +107,7 @@ const Footer = ({category, setCategory}) => {
       </div>
       <div className="flex justify-between mt-10 flex-col md:flex-row gap-[10px] md:gap-0">
         <div className="text-[12px] text-white/[0.5] hover:text-white cursor-pointer text-center md:text-left">
-          © 2023 CRM, Inc. All Rights Reserved
+          © 2024 News, Inc. All Rights Reserved
         </div>
         <div className="flex gap-2 md:gap-5 text-center md:text-left flex-wrap justify-center">
           <div className="text-[12px] text-white/[0.5] hover:text-white cursor-pointer">

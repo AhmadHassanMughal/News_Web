@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const initialItemsToShow = 11;
 const itemsPerLoad = 4;
