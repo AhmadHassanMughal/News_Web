@@ -149,7 +149,7 @@ function App() {
             />
           ) : (
             <Route
-              path={`/${category == "treding" ? '' : category}`}
+              path={`/${category == "treding" ? "" : category}`}
               element={
                 <Category
                   randomMapData={randomMapData}
@@ -159,8 +159,8 @@ function App() {
               }
             />
           )}
+          <Route path="*" element={<Navigate to={`/${category == "trending" ? '' : category }`} />} />
         </Routes>
-        {/* <Route path="*" element={<Navigate to="/trending" />} /> */}
       </div>
       <Footer category={category} setCategory={setCategory} />
     </BrowserRouter>
