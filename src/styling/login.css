@@ -1,0 +1,15 @@
+.loginInput{
+    border-radius: 20px !important;
+}
+
+.loginButton{
+    height: 45px !important;
+    margin-top: 20px !important;
+    border-radius: 8px !important;
+    font-weight: 800 !important;
+    background-color: #A52922 !important;
+}
+
+.loginButton:hover{
+    background-color: rgb(197, 0, 0) !important;
+}

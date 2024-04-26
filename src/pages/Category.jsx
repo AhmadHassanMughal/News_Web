@@ -29,7 +29,7 @@ const Category = ({ randomData, randomMapData, setCategory }) => {
           </p>
         </div>
         <div className="w-[45%] max-lg:w-full  flex flex-col gap-3 ">
-          {randomMapData
+          {randomMapData && randomMapData
             ?.slice(0, 3)
             ?.filter(
               (val) =>
@@ -61,7 +61,7 @@ const Category = ({ randomData, randomMapData, setCategory }) => {
       </div>
       <div>
         <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 mt-10 ">
-          {randomMapData
+          {randomMapData && randomMapData
             ?.slice(3, itemsToShow)
             ?.filter(
               (val) =>

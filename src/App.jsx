@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import Navbar from "./components/NavBar";
@@ -6,10 +6,20 @@ import Footer from "./components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Category from "./pages/Category";
+import Login from "./pages/Login";
 
 function App() {
   const [fetchData, setFetchData] = useState([]);
-  const sourceIds = [...new Set(fetchData.map(article => article.source.id)?.filter(sourceId => sourceId !== null && sourceId !== undefined && sourceId !== ''))];
+  const sourceIds = [
+    ...new Set(
+      fetchData
+        .map((article) => article.source.id)
+        ?.filter(
+          (sourceId) =>
+            sourceId !== null && sourceId !== undefined && sourceId !== ""
+        )
+    ),
+  ];
   console.log(sourceIds);
   const [category, setCategory] = useState(
     localStorage.getItem("category") || "trending"
@@ -87,7 +97,12 @@ function App() {
     // Retrieve random data from local storage
     const storedRandomData = JSON.parse(localStorage.getItem("randomData"));
 
-    if (storedRandomData) {
+    if (
+      storedRandomData &&
+      storedRandomData.length != 0 &&
+      storedRandomData != false
+    ) {
+      console.log("good");
       setRandomMapData(storedRandomData);
     } else {
       // Update random data initially
@@ -107,6 +122,7 @@ function App() {
   const handleApplyFilter = (e) => {
     e.preventDefault();
     setFilterData((prev) => ({ ...prev, source: source, date: date }));
+    localStorage.setItem("categoryChanged", "true");
   };
   return (
     <BrowserRouter>
@@ -120,18 +136,31 @@ function App() {
       />
       <div className="h-full mb-10">
         <Routes>
-          {/* <Route path='/trending' element={<Home randomMapData={randomMapData} randomData={randomData} setCategory={setCategory} />} /> */}
-          <Route
-            path={`/${category}`}
-            element={
-              <Category
-                randomMapData={randomMapData}
-                randomData={randomData}
-                setCategory={setCategory}
-              />
-            }
-          />
+          {category == "trending" ? (
+            <Route
+              path="/"
+              element={
+                <Home
+                  randomMapData={randomMapData}
+                  randomData={randomData}
+                  setCategory={setCategory}
+                />
+              }
+            />
+          ) : (
+            <Route
+              path={`/${category == "treding" ? '' : category}`}
+              element={
+                <Category
+                  randomMapData={randomMapData}
+                  randomData={randomData}
+                  setCategory={setCategory}
+                />
+              }
+            />
+          )}
         </Routes>
+        {/* <Route path="*" element={<Navigate to="/trending" />} /> */}
       </div>
       <Footer category={category} setCategory={setCategory} />
     </BrowserRouter>

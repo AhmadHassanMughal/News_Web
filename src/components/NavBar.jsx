@@ -15,6 +15,7 @@ import { Drawer, SwipeableDrawer } from "@mui/material";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineSearch } from "react-icons/ai";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { SESSION_ADMIN_LOGIN, SESSION_ADMIN_TYPE, SESSION_ADMIN_USER } from "../Utils/Constant";
 
 const Navbar = ({
   category,
@@ -35,31 +36,34 @@ const Navbar = ({
     // Set the flag to true indicating the category has changed
     localStorage.setItem("category", newCategory);
     localStorage.setItem("categoryChanged", "true");
-    navigate(`/${newCategory}`);
+    if(newCategory == "trending"){
+      navigate(`/`);
+    } else{
+      navigate(`/${newCategory}`);
+    }
   };
 
   //   const [login, setLogin] = useState()
   //   const [seekerData, setSeekerData] = useState()
 
-  //   useEffect(() => {
-  //     const isLogin = sessionStorage.getItem(SESSION_LOGIN)
-  //     if (isLogin === "true") {
-  //       setLogin(true)
-  //       setSeekerData(JSON.parse(sessionStorage.getItem(SESSION_SEEKER)));
-  //       // console.log(JSON.parse(sessionStorage.getItem(SESSION_SEEKER)))
-  //     } else {
-  //       setLogin(false)
-  //     }
-  //   }, []);
-
-  //   const logout = () => {
-  //     sessionStorage.setItem(SESSION_LOGIN, "false")
-  //     sessionStorage.setItem(SESSION_ID, null)
-  //     sessionStorage.setItem(SESSION_TYPE, null)
-  //     sessionStorage.setItem(SESSION_SEEKER, null)
-  //     setLogin(false)
-
+  // useEffect(() => {
+  //   const isLogin = sessionStorage.getItem(SESSION_ADMIN_LOGIN)
+  //   if (isLogin === "false") {
+  //     navigate('/')
+  //     // console.log(JSON.parse(sessionStorage.getItem(SESSION_SEEKER)))
+  //   } else {
+  //     ''
   //   }
+  // }, []);
+
+    const logout = () => {
+      sessionStorage.setItem(SESSION_ADMIN_LOGIN, "false")
+      sessionStorage.setItem(SESSION_ADMIN_TYPE, null)
+      sessionStorage.setItem(SESSION_ADMIN_USER, null)
+      // setLogin(false)
+      navigate('/')
+
+    }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -83,73 +87,14 @@ const Navbar = ({
             News
           </span>
         </p>
-        {/* <div className='ml-auto mr-4 '>
-            <Dropdown arrowIcon={false}
-              inline
-              label={<Avatar alt="User settings" img="./assets/profile.png" rounded />}
-              className='w-50 p-4 rounded-xl'>
-              <Dropdown.Header>
-                <span className="block text-sm">
-                  Cheema
-                </span>
-                <span className="block truncate text-sm font-medium">
-                  Cheema@gmail.com             </span>
-              </Dropdown.Header>
-              <Link to='/profileInfo' className='flex py-2'>
-                <div className='ml-2 mr-4 mt-[4px]'>
-                  <HiViewGrid />
-                </div>
-                Profile
-              </Link>
-
-              <Dropdown.Divider />
-              <div className='flex py-2 cursor-pointer'>
-                <div className='ml-2 mr-4 mt-[4px]'>
-                  <HiLogout />
-                </div>
-                Sign out
-              </div>
-            </Dropdown>
-          </div> */}
-        {/* <div className='flex gap-4 text-[1.1rem]'>
-            <p onClick={() => navigate('/login')} className='border-2 px-4 pt-[6px] bg-red-500 text-white text-[.9rem] rounded-[5px] cursor-pointer hover:bg-red-700 font-[600]  '>Sign Up</p>
-            <p className='border-[2px] border-gray-400 px-4 rounded-[5px] text-[.9rem] pt-[6px] text-red-800  cursor-pointer hover:bg-red-200 font-[600] '>Log in</p>
-          </div> */}
-        {/* {login ?
-          <div className='ml-auto mr-4 '>
-            <Dropdown arrowIcon={false}
-              inline
-              label={<Avatar alt="User settings" img="./assets/profile.png" rounded />}
-              className='w-50 p-4 rounded-xl'>
-              <Dropdown.Header>
-                <span className="block text-sm">
-                  {seekerData?.name}
-                </span>
-                <span className="block truncate text-sm font-medium">
-                  {seekerData?.email}              </span>
-              </Dropdown.Header>
-              <Link to='/profileInfo' className='flex py-2'>
-                <div className='ml-2 mr-4 mt-[4px]'>
-                  <HiViewGrid />
-                </div>
-                Profile
-              </Link>
-
-              <Dropdown.Divider />
-              <div className='flex py-2 cursor-pointer' onClick={() => logout()}>
-                <div className='ml-2 mr-4 mt-[4px]'>
-                  <HiLogout />
-                </div>
-                Sign out
-              </div>
-            </Dropdown>
+        <div className='flex gap-4 text-[1.1rem]'>
+        <button
+            onClick={logout}
+            className="px-4 py-[1px] text-[.9rem] font-[700] bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Sign Out
+          </button>
           </div>
-          :
-          <div className='flex gap-4 text-[1.1rem]'>
-            <p onClick={() => navigate('/login')} className='border-2 px-4 pt-[6px] bg-red-500 text-white text-[.9rem] rounded-[5px] cursor-pointer hover:bg-red-700 font-[600]  '>Sign Up</p>
-            <p className='border-[2px] border-gray-400 px-4 rounded-[5px] text-[.9rem] pt-[6px] text-red-800  cursor-pointer hover:bg-red-200 font-[600] '>Log in</p>
-          </div>
-        } */}
       </div>
       <div className="max-md:hidden block">
         <nav className="bg-gray-200 pt-4 mt-4 pb-2 ">
